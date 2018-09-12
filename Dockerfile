@@ -1,8 +1,13 @@
-FROM ruby:alpine
+FROM starefossen/ruby-node:latest
 
-RUN apk add --update build-base postgresql-dev sqlite-dev tzdata bash
-RUN gem install rails -v '5.2.1'
+RUN apt-get update -qq && \
+    apt-get install -y nano build-essential libpq-dev && \
+    gem install bundler
 
-# WORKDIR /app
-# ADD Gemfile Gemfile.lock /app/
-# RUN bundle install
+RUN mkdir /app
+COPY Gemfile Gemfile.lock /app/
+WORKDIR /app
+
+RUN bundle install
+
+COPY . /app
